@@ -9,6 +9,7 @@ Blueberry Pi is a platform for hosting dockerized applications on a customized R
 | File | Description |
 | - | - |
 | SETUP.md | Notes and procedures for setting up the OS. |
+| DOCKER-COMPOSE-SERVICE.md | Instructions for creating a docker compose service file |
 
 # General Notes on Setup and Design
 
@@ -25,14 +26,14 @@ Here‘s the basic process of developing and deploying an app with docker:
     If building on the target directly, then the docker "build" command is sufficient. If developing on a different architecture like a Macbook, then you must build using the buildx cli plugin that now is included in the Docker install by default. Confirm the architecture of the target before running the build.
 
     ```
-    docker buildx build -t doodles67/docker-nodeapp --platform linux/arm/v7 .
+    docker buildx build --platform=linux/arm/v7 -t doodles67/<image name> --push .
     ```
 
-4. Deploy the build to Docker Hub
+    Docker Desktop must be open even though the command is run in a terminal?
 
-    Use Docker Desktop.
+    This will push the image to Docker Hub where it can be pulled onto the Raspberry Pi.
 
-5. Deploy the image to the Raspberry Pi
+4. Deploy the image to the Raspberry Pi
 
     ```
     sudo docker pull doodles67/<image name>
@@ -42,4 +43,10 @@ Here‘s the basic process of developing and deploying an app with docker:
 
     ```
     sudo docker images
+    ```
+
+5. To manually run the service, enter the following command:
+
+    ```
+    sudo docker run -d -p 8080:8081 -t doodles67/<image name>
     ```
