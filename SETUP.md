@@ -91,6 +91,13 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
     sudo apt install -y nodejs
     ```
 
+    I actually don't think I need to install because the docker image has it. So I uninstalled as follows:
+
+    ```
+    sudo apt purge nodejs
+    sudo apt autoremove
+    ```
+
 9. Set up the Docker-Compose file
 
     See DOCKER-COMPOSE-SERVICE.md
