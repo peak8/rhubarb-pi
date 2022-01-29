@@ -84,14 +84,14 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 
 8. Install Nodejs and NPM 
 
-    Note: doing "sudo apt install nodejs" will result in an old version (10.24) that can't be updated. Likely because based on Raspbian?
+    Note: doing "sudo apt install nodejs" will result in an old version (10.24) that can't be updated. Likely due to Raspbian package manager? The following commands needed to be used instead.
 
     ```
     curl -sL https://deb.nodesource.com/setup_17.x | sudo -E bash -
     sudo apt install -y nodejs
     ```
 
-    I actually don't think I need to install because the docker image has it. So I uninstalled as follows:
+    After installing Node and npm, I realized that the container image would have Node installed, so I uninstalled as follows:
 
     ```
     sudo apt purge nodejs

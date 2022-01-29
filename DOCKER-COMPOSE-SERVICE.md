@@ -38,11 +38,16 @@ The docker-compose-service will run as a system service on reboot. All app conta
     Create the docker-compose.yaml file as follows:
 
     ```
-    
+    services:
+        node-app:
+            image: doodles67/docker-node-app-rpi
+            restart: always
+            ports:
+                - 8080:8081
     ```
 
 3. Enable the docker-compose-app service
 
     ```
-    systemctl enable docker-compose-app
+    sudo systemctl enable docker-compose-app
     ```
