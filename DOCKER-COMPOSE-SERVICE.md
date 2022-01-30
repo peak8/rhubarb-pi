@@ -40,7 +40,7 @@ The docker-compose-service will run as a system service on reboot. All app conta
     ```
     services:
         node-app:
-            image: doodles67/docker-node-app-rpi
+            image: doodles67/docker-node-app-rpi:<version>
             restart: always
             ports:
                 - 8080:8081
