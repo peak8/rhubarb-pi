@@ -39,12 +39,19 @@ The docker-compose-service will run as a system service on reboot. All app conta
 
     ```
     services:
-        node-app:
+        test-node-app:
             image: doodles67/docker-node-app-rpi:<version>
             restart: always
             ports:
                 - 8080:8081
+        zwave-app:
+            image: doodles67/zwave-app-rpi:0.1.1
+            restart: always
+            ports:
+                - 3001:3001
     ```
+
+    The name of the service determines the name of the container. When starting a container from docker-compose.yaml, Docker will prefix the name with docker_ and append _1. The example above would create a container by the name of docker_test-node-app_1. This can be referenced by other scripts. For example, a script that expose a serial port to the container.
 
 3. Enable the docker-compose-app service
 

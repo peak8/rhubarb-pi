@@ -2,7 +2,23 @@
 
 This documents just has some notes and useful tips on creating and deploying docker images.
 
-## Building Docker Images
+# Creating Docker files
+
+Docker images are built in layers. Docker compares the contents and instructions that would make up the each new layer to previous builds. If they match the SHA256 checksum for the existing layer, the build step for that layer can be skipped.
+
+Code changes a lot more than dependencies, and dependencies are usually fetched from a slow(ish) network now. If you copy the code after the dependency installs are completed then you don't bust the cached dependency layer for every other change.
+
+This is a common theme across many languages with a dependency manager. Go, Python, Node.js etc. The Node.js equivalent does the package.json and package-lock.json before the rest of the application contents:
+
+```
+WORKDIR /app
+COPY package.json package-lock.json /app/
+RUN npm install
+COPY . /app/
+CMD ["node", "app/index.js"]
+```
+
+# Building Docker Images
 
 My development for the Blueberry Pi is done predominantly on a Macbook but the target is a Raspberry Pi. This requires the buildx cli plugin that now is included in the Docker install by default. 
 
@@ -24,7 +40,7 @@ docker buildx build --platform=linux/arm/v7 -t doodles67/<image name>:<version> 
 
 This command with the --push option will push the image to Docker Hub. Omitting <version> will default to "latest".
 
-## Deploy the image to the Raspberry Pi
+# Deploy the image to the Raspberry Pi
 
 ```
 sudo docker pull doodles67/<image name>:<version>
@@ -36,19 +52,21 @@ Verify image is loaded
 sudo docker images
 ```
 
-## Running the Image on the Raspberry Pi
+# Running the Image on the Raspberry Pi
 
 To manually run the image, enter the following command:
 
 ```
-sudo docker run -d -p <host:container port forward> -t doodles67/<image name>:<version>
+sudo docker run -d -p <host:container port forward> --name <name> -t doodles67/<image name>:<version>
 ```
 
-This creates a container that can be stopped and restarted.
+This creates a container that can be stopped and restarted. To see console messages, omit the -d flag. Omitting the --name flag will result in a random name being assigned.
+
+See "Accessing tty Devices" for run command that exposes a serial USB device within the container.
 
 To automatically run the image, add it to the system docker-compose.yml file. See DOCKER-COMPOSE-SERVICE.md.
 
-## Update the Image (Manually)
+# Update the Image (Manually)
 
 The docker-compose service is set up to use the latest image but won't pull the latest unless forced to do so.
 
@@ -71,6 +89,80 @@ The -f flag is only required if you don't remove any containers created from the
 
 Reboot the Raspberry Pi and a new container should be started on the new image.
 
-## Update the Image (automated)
+# Update the Image (automated)
 
 ToDo: figure out how to push updates to deployed devices.
+
+# Accessing tty Devices
+
+The following procedure is a safe way to give access to ttyUSBx devices from within the Docker container without granting --priveleged access, which creates a security vulnerability.
+
+First find the cgroup properties of the device.
+
+```
+ls -l /dev/ | grep ttyUSB
+crw-rw---- 1 root dialout 188, 0 Feb  2 05:29 /dev/ttyUSB0
+```
+
+In the example above, a Zwave controller hub is plugged in to a USB port and looks like a serial USB device represented by the general dialout group 188. This number is used to set a cgroup rule in the Docker Run command as shown below:
+
+```
+sudo docker run -d -p <host:container port forward> --device-cgroup-rule='c 188:* rmw' -t doodles67/<image name>:<version>
+```
+
+Next, create a custom rule for a script that will run every time a USB device is plugged in or removed. In a GNU/Linux system, while devices low level support is handled at the kernel level, the management of events related to them is managed in userspace by udev, and more precisely by the udevd daemon. Custom rules are stored in /etc/udev/rules.d/
+
+```
+sudo nano /etc/udev/rules.d/99-docker-tty.rules
+```
+
+```
+ACTION=="add", SUBSYSTEM=="tty", RUN+="/usr/local/bin/docker_tty.sh 'added' '%E{DEVNAME}' '%M' '%m'"
+ACTION=="remove", SUBSYSTEM=="tty", RUN+="/usr/local/bin/docker_tty.sh 'removed' '%E{DEVNAME}' '%M' '%m'"
+```
+
+"%M" returns the major cgroup (188 in the case of USB to Serial devices). "%m" seems to return a port number. 
+
+Apply the rules:
+
+```
+sudo udevadm control --reload
+```
+
+Now create the script:
+
+```
+sudo nano /usr/local/bin/docker_tty.sh
+```
+
+```
+#!/usr/bin/env bash  
+                                                           
+echo "Usb event: $1 $2 $3 $4" >> /tmp/docker_tty.log        
+if [ ! -z "$(docker ps -qf name=env_dev)" ]                                     
+then                                                                            
+if [ "$1" == "added" ]                                                          
+    then                                                                        
+        docker exec -u 0 env_dev mknod $2 c $3 $4                               
+        docker exec -u 0 env_dev chmod -R 777 $2                                
+        echo "Adding $2 to docker" >> /tmp/docker_tty.log                
+    else                                                                        
+        docker exec -u 0 env_dev rm $2                                          
+        echo "Removing $2 from docker" >> /tmp/docker_tty.log            
+    fi                                                                          
+fi
+```
+
+And make it executable:
+
+```
+sudo chmod +x /usr/local/bin/docker_tty.sh
+```
+
+This script creates or deletes the tty device in the running docker container. To inspect if the device can be seen within the container, run the following command:
+
+```
+sudo docker exec -it <container name> bash
+```
+
+This will open a shell into the container where you can then list the contents of the /dev/ folder.
