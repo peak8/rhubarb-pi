@@ -95,7 +95,23 @@ ToDo: figure out how to push updates to deployed devices.
 
 # Accessing tty Devices
 
+For an app that requires access to a serial tty device, the --device option must be added to the run command as follows:
+
+```
+sudo docker run -p <host port:container port> --name <name> --device /dev/ttyUSBx -t doodles67/<image name>:<version>
+```
+
+For the moment I am hard coding the port number in the app expecting that a serial device plugged into it will match.
+
+See DOCKER-COMPOSE-SERVICE.md for adding to the docker-compose file.
+
+ToDo: add flexibility in both the app and the way port numbers are mapped to the docker container so that the port number is not hard coded. Will likely require the procedure below:
+
+## A Procedure to have the Blueberry Pi map a port to a conatiner
+
 The following procedure is a safe way to give access to ttyUSBx devices from within the Docker container without granting --priveleged access, which creates a security vulnerability.
+
+This procedure was successful in allowing the container to see the serial port but the mapping doesn't occur until after the app makes its first attempt to talk to the serial device. The first attempt fails to find the port and destroys the device driver. When it tries again a minute later, it fails to open the port due to permissions. This issue has not been resolved. Also, I am still hard coding the port number so it is incomplete. 
 
 First find the cgroup properties of the device.
 
@@ -129,7 +145,7 @@ Apply the rules:
 sudo udevadm control --reload
 ```
 
-Now create the script:
+Now create the script to respond to plug events. This works to add or remove a serial device on plug events but doesn't do anything when the device is already plugged in. And even when the device is added to the container, the app still reports the serial port being closed. ToDo: fix this.
 
 ```
 sudo nano /usr/local/bin/docker_tty.sh
@@ -139,15 +155,15 @@ sudo nano /usr/local/bin/docker_tty.sh
 #!/usr/bin/env bash  
                                                            
 echo "Usb event: $1 $2 $3 $4" >> /tmp/docker_tty.log        
-if [ ! -z "$(docker ps -qf name=env_dev)" ]                                     
+if [ ! -z "$(docker ps -qf name=<container name>)" ]                                     
 then                                                                            
 if [ "$1" == "added" ]                                                          
     then                                                                        
-        docker exec -u 0 env_dev mknod $2 c $3 $4                               
-        docker exec -u 0 env_dev chmod -R 777 $2                                
+        docker exec -u 0 <container name> mknod $2 c $3 $4                               
+        docker exec -u 0 <container name> chmod -R 777 $2                                
         echo "Adding $2 to docker" >> /tmp/docker_tty.log                
     else                                                                        
-        docker exec -u 0 env_dev rm $2                                          
+        docker exec -u 0 <container_name> rm $2                                          
         echo "Removing $2 from docker" >> /tmp/docker_tty.log            
     fi                                                                          
 fi

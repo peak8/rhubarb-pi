@@ -41,12 +41,16 @@ The docker-compose-service will run as a system service on reboot. All app conta
     services:
         test-node-app:
             image: doodles67/docker-node-app-rpi:<version>
+            container_name: test-node-app
             restart: always
             ports:
                 - 8080:8081
         zwave-app:
             image: doodles67/zwave-app-rpi:0.1.1
+            container_name: zwave-app
             restart: always
+            devices: 
+                - /dev/ttyUSB0:/dev/ttyUSB0
             ports:
                 - 3001:3001
     ```
