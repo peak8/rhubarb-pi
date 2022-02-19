@@ -79,7 +79,7 @@ The procedures are based on the following tutorials and assumes Raspberry Pi OS 
     Add the KIOSK_URL to the file
 
     ```
-    export KIOSK_URL=http://localhost:6967/app
+    export KIOSK_URL=http://172.16.10.2:6769/app
     ```
 
-    I do this here so I can change the URL simply by remote-logging in, editing the environment file and rebooting.
+    172.16.10.2 is the static IP address on the docker blueberrypi network which is assigned to the main kiosk app. See DOCKER-COMPOSE-SERVICE.md for more details.

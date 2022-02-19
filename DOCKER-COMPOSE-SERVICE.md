@@ -2,6 +2,29 @@
 
 The docker-compose-service will run as a system service on reboot. All app containers that run on the Blueberry Pi, will be lauched from this service.
 
+## Container Networks
+
+The docker-compose file sets up networks that containers use to communicate with one another. These networks are set up with static addresses. Address ranges to be use by private networks are:
+
+```
+Class A: 10.0.0.0 to 10.255.255.255
+Class B: 172.16.0.0 to 172.31.255.255
+Class C: 192.168.0.0 to 192.168.255.255
+```
+
+I have chosen 172.16.10.0/24, 172.16.20.0/24, and 172.16.30.0/24 for the first app containers deployed on the Blueberry Pi. Future app containers will continue to increment by 10.
+
+The Blueberry Pi host system maps ports to apps as follows:
+
+```
+6701 - Kiosk app
+6702 - Test Node app
+6703 - Zwave app
+
+Each app exposes port 6769 at a minimum. This port is arbitrarily chosen. It is unassigned with ICANN and it is the years of release for my two favorite Beatles albums, Abbey Road and Sgt. Peppers.
+
+The host system
+
 # Set Up the Docker-Compose service
 
 1. Create the docker-composer-app.service file.
@@ -39,30 +62,39 @@ The docker-compose-service will run as a system service on reboot. All app conta
 
     ```
     services:
+        kiosk-app:
+            image: doodles67/kiosk-app:<version>
+            container_name: kiosk-app
+            restart: always
+            networks: 
+                blueberrypi:
+                    ipv4_address: 172.16.10.2
+            ports:
+                - 6701:6769
         test-node-app:
             image: doodles67/docker-node-app-rpi:<version>
             container_name: test-node-app
             restart: always
             networks: 
                 blueberrypi:
-                    ipv4_address: 172.16.10.10
+                    ipv4_address: 172.16.10.3
                 testnode:
-                    ipv4_address: 172.16.20.10
+                    ipv4_address: 172.16.20.3
             ports:
-                - 8080:8081
+                - 6702:6769
         zwave-app:
-            image: doodles67/zwave-app-rpi:0.1.1
+            image: doodles67/zwave-app-rpi:<version>
             container_name: zwave-app
             restart: always
             devices: 
                 - /dev/ttyUSB0:/dev/ttyUSB0
             networks:
                 blueberrypi:
-                    ipv4_address: 172.16.10.10
+                    ipv4_address: 172.16.10.4
                 zwave:
-                    ipv4_address: 172.16.30.10
+                    ipv4_address: 172.16.30.4
             ports:
-                - 3001:3001
+                - 6703:6769
     
     networks:
         blueberrypi:
@@ -99,6 +131,8 @@ The docker-compose-service will run as a system service on reboot. All app conta
     sudo systemctl enable docker-compose-app
     ```
 
+    Now, every time the Blueberry Pi reboots the containers are torn down and recreated.
+
 # Miscellaneous Comments
 
 To test network setup you can make a call into a container apps api from a terminal as follows (zwave example):
@@ -113,10 +147,3 @@ To inspect properties of a network:
 sudo docker network inspect docker_blueberrypi
 ```
 
-Address ranges to be use by private networks are:
-
-```
-Class A: 10.0.0.0 to 10.255.255.255
-Class B: 172.16.0.0 to 172.31.255.255
-Class C: 192.168.0.0 to 192.168.255.255
-```
