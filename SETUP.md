@@ -101,3 +101,7 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 9. Set up the Docker-Compose file
 
     See DOCKER-COMPOSE-SERVICE.md
+
+10. Optionally set up the kiosk
+
+    This step sets up the Blueberry Pi to display a React app on a monitor connected to the HDMI ports. See KIOSK-SETUP.md.

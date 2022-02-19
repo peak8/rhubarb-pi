@@ -43,6 +43,11 @@ The docker-compose-service will run as a system service on reboot. All app conta
             image: doodles67/docker-node-app-rpi:<version>
             container_name: test-node-app
             restart: always
+            networks: 
+                blueberrypi:
+                    ipv4_address: 172.16.10.10
+                testnode:
+                    ipv4_address: 172.16.20.10
             ports:
                 - 8080:8081
         zwave-app:
@@ -51,14 +56,67 @@ The docker-compose-service will run as a system service on reboot. All app conta
             restart: always
             devices: 
                 - /dev/ttyUSB0:/dev/ttyUSB0
+            networks:
+                blueberrypi:
+                    ipv4_address: 172.16.10.10
+                zwave:
+                    ipv4_address: 172.16.30.10
             ports:
                 - 3001:3001
+    
+    networks:
+        blueberrypi:
+            driver: bridge
+            enable_ipv6: false
+            ipam:
+                driver: default
+                config:
+                    - subnet: 172.16.10.0/24
+                      gateway: 172.16.10.1
+        testnode:
+            driver: bridge
+            enable_ipv6: false
+            ipam:
+                driver: default
+                config:
+                    - subnet: 172.16.20.0/24
+                      gateway: 172.16.20.1
+        zwave:
+            driver: bridge
+            enable_ipv6: false
+            ipam:
+                driver: default
+                config:
+                    - subnet: 172.16.30.0/24
+                      gateway: 172.16.30.1
     ```
 
-    The name of the service determines the name of the container. When starting a container from docker-compose.yaml, Docker will prefix the name with docker_ and append _1. The example above would create a container by the name of docker_test-node-app_1. This can be referenced by other scripts. For example, a script that expose a serial port to the container.
+    The blueberrypi network is for the main server application (pointed to by the Chromium Kiosk) and allows it to reach other apps for data to be rendered on the Kiosk screen. The other defined networks (zwave, etc.) are sub-networks dedicated to each app allowing private databases, microservices, etc. for each.
 
 3. Enable the docker-compose-app service
 
     ```
     sudo systemctl enable docker-compose-app
     ```
+
+# Miscellaneous Comments
+
+To test network setup you can make a call into a container apps api from a terminal as follows (zwave example):
+
+```
+curl 172.16.10.3:3001/admin/status001/admin/status
+```
+
+To inspect properties of a network:
+
+```
+sudo docker network inspect docker_blueberrypi
+```
+
+Address ranges to be use by private networks are:
+
+```
+Class A: 10.0.0.0 to 10.255.255.255
+Class B: 172.16.0.0 to 172.31.255.255
+Class C: 192.168.0.0 to 192.168.255.255
+```
