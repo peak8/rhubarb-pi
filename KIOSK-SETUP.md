@@ -83,3 +83,26 @@ The procedures are based on the following tutorials and assumes Raspberry Pi OS 
     ```
 
     172.16.10.2 is the static IP address on the docker blueberrypi network which is assigned to the main kiosk app. See DOCKER-COMPOSE-SERVICE.md for more details.
+
+5. Start the X server on boot
+
+    Open ~/.bash_profile (creates if it doesn't exist):
+
+    ```
+    nano ~/.bash_profile
+    ```
+
+    Add this line to start the X server on boot. Not clear if I want the cursor or not since I will support touchscreen someday. Comment out the line to boot up at the command line.
+
+    ```
+    [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx -- -nocursor
+    ```
+
+    Save and exit the file. From the command line update source then reboot:
+
+    ```
+    source ~/.bash_profile
+    reboot
+    ```
+
+    After the server runs through its startup sequence, the browser should be launched and fill the whole screen.
