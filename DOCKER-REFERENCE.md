@@ -4,19 +4,20 @@ This documents just has some notes and useful tips on creating and deploying doc
 
 # Creating Docker files
 
-Docker images are built in layers. Docker compares the contents and instructions that would make up the each new layer to previous builds. If they match the SHA256 checksum for the existing layer, the build step for that layer can be skipped.
-
-Code changes a lot more than dependencies, and dependencies are usually fetched from a slow(ish) network now. If you copy the code after the dependency installs are completed then you don't bust the cached dependency layer for every other change.
-
-This is a common theme across many languages with a dependency manager. Go, Python, Node.js etc. The Node.js equivalent does the package.json and package-lock.json before the rest of the application contents:
+Docker files for apps deployed on the Blueberry Pi have varying needs but minimally will look as follows.
 
 ```
-WORKDIR /app
-COPY package.json package-lock.json /app/
+FROM arm32v7/node:17.4-buster-slim
+COPY package.json ./
+COPY app.js ./
 RUN npm install
-COPY . /app/
-CMD ["node", "app/index.js"]
+EXPOSE 6769
+CMD ["node", "app.js"]
 ```
+
+The reference image for most apps should start with Node:17.4-buster-slim, but there are cases where this image won't be sufficient (i.e. Zwave app). Each application should test reference images and document results, starting with the smallest image.
+
+Each app should expose port 6769 at a minimum, even if only to provide a welcome message or info message.
 
 # Building Docker Images
 
@@ -65,6 +66,12 @@ This creates a container that can be stopped and restarted. To see console messa
 See "Accessing tty Devices" for run command that exposes a serial USB device within the container.
 
 To automatically run the image, add it to the system docker-compose.yml file. See DOCKER-COMPOSE-SERVICE.md.
+
+# Inspect the Container File System
+
+```
+sudo docker exec -t -i <container name> /bin/bash
+```
 
 # Update the Image (Manually)
 

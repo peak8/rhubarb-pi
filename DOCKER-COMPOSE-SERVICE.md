@@ -62,9 +62,9 @@ The host system
 
     ```
     services:
-        kiosk-app:
-            image: doodles67/kiosk-app:<version>
-            container_name: kiosk-app
+        blueberry-pi-core-server:
+            image: doodles67/blueberry-pi-core-server:<version>
+            container_name: core-server
             restart: always
             networks: 
                 blueberrypi:
