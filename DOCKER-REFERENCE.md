@@ -4,7 +4,7 @@ This documents just has some notes and useful tips on creating and deploying doc
 
 # Creating Docker files
 
-Docker files for apps deployed on the Blueberry Pi have varying needs but minimally will look as follows.
+Docker files for apps deployed on the Rhubarb Pi have varying needs but minimally will look as follows.
 
 ```
 FROM arm32v7/node:17.4-buster-slim
@@ -21,7 +21,7 @@ Each app should expose port 6769 at a minimum, even if only to provide a welcome
 
 # Building Docker Images
 
-My development for the Blueberry Pi is done predominantly on a Macbook but the target is a Raspberry Pi. This requires the buildx cli plugin that now is included in the Docker install by default. 
+My development for the Rhubarb Pi is done predominantly on a Macbook but the target is a Raspberry Pi. This requires the buildx cli plugin that now is included in the Docker install by default. 
 
 Confirm the architecture of the target before running the build. Any one of the following commands can be used to determine this.
 
@@ -114,7 +114,7 @@ See DOCKER-COMPOSE-SERVICE.md for adding to the docker-compose file.
 
 ToDo: add flexibility in both the app and the way port numbers are mapped to the docker container so that the port number is not hard coded. Will likely require the procedure below:
 
-## A Procedure to have the Blueberry Pi map a port to a conatiner
+## A Procedure to have the Rhubarb Pi map a port to a conatiner
 
 The following procedure is a safe way to give access to ttyUSBx devices from within the Docker container without granting --priveleged access, which creates a security vulnerability.
 

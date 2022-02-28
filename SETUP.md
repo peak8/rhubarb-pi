@@ -1,6 +1,6 @@
 # Introduction
 
-The Blueberry Pi is intended to be used with a display with Openbox as the window manager.  Chromium is used in kiosk mode to display React apps for various applications.
+The Rhubarb Pi is intended to be used with a display with Openbox as the window manager.  Chromium is used in kiosk mode to display React apps for various applications.
 
 An image is set up and tested on one uSD card and then can be cloned for deployment to other Raspberry Pi's.
 
@@ -104,4 +104,4 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 
 10. Optionally set up the kiosk
 
-    This step sets up the Blueberry Pi to display a React app on a monitor connected to the HDMI ports. See KIOSK-SETUP.md.
+    This step sets up the Rhubarb Pi to display a React app on a monitor connected to the HDMI ports. See KIOSK-SETUP.md.

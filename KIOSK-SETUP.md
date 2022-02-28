@@ -1,6 +1,6 @@
 # Introduction
 
-The Blueberry Pi can have a Kiosk mode, where a React app is displayed on a monitor connected to one of the HDMI ports. This requires a number of packages be installed for managing the graphics. This document details the procedure for setting up the environment using Openbox as a Window Manager.
+The Rhubarb Pi can have a Kiosk mode, where a React app is displayed on a monitor connected to one of the HDMI ports. This requires a number of packages be installed for managing the graphics. This document details the procedure for setting up the environment using Openbox as a Window Manager.
 
 The procedures are based on the following tutorials and assumes Raspberry Pi OS Lite (32-bit) based on Debian Buster is the base OS:
 
@@ -11,7 +11,7 @@ The procedures are based on the following tutorials and assumes Raspberry Pi OS 
 
 1. Install Minimum UI Components
 
-    Blueberry Pi requires a Chromium browser and a minimal set of UI components to support it.
+    Rhubarb Pi requires a Chromium browser and a minimal set of UI components to support it.
 
     ```
     sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox
@@ -68,7 +68,7 @@ The procedures are based on the following tutorials and assumes Raspberry Pi OS 
 
     Note: the [Archlinux wiki site for Openbox](https://wiki.archlinux.org/title/openbox) mentions I must create a local Openbox profile by copying the four scripts/config files. What todo?
 
-4. Point Openbox at the desired app running on the Blueberry Pi
+4. Point Openbox at the desired app running on the Rhubarb Pi
 
     Open the environment script
 
@@ -82,7 +82,7 @@ The procedures are based on the following tutorials and assumes Raspberry Pi OS 
     export KIOSK_URL=http://172.16.10.2:6769/app
     ```
 
-    172.16.10.2 is the static IP address on the docker blueberrypi network which is assigned to the main kiosk app. See DOCKER-COMPOSE-SERVICE.md for more details.
+    172.16.10.2 is the static IP address on the docker rhubarbpi network which is assigned to the main kiosk app. See DOCKER-COMPOSE-SERVICE.md for more details.
 
 5. Start the X server on boot
 

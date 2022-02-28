@@ -1,6 +1,6 @@
 # Introduction
 
-Blueberry Pi is a platform for hosting dockerized applications on a customized Raspberry Pi running a minimal Linux OS. In addition to the capabilities available on a Raspberry Pi (dual 4k HDMI, ethernet, wifi, USB, etc.), the Blueberry Pi platform also has support for:
+Rhubarb Pi is a platform for hosting dockerized applications on a customized Raspberry Pi running a minimal Linux OS. In addition to the capabilities available on a Raspberry Pi (dual 4k HDMI, ethernet, wifi, USB, etc.), the Rhubarb Pi platform also has support for:
 
 - Zwave compatible USB controllers (i.e. Nortek)
 
@@ -11,7 +11,7 @@ Blueberry Pi is a platform for hosting dockerized applications on a customized R
 | SETUP.md | Notes and procedures for setting up the OS. |
 | DOCKER-COMPOSE-SERVICE.md | Instructions for creating a docker compose service file |
 | DOCKER-REFERENCE.md | Instructions and notes on building and deploying docker images|
-| KIOSK-SETUP.md | Instructions for setting up the Blueberry Pi Kiosk |
+| KIOSK-SETUP.md | Instructions for setting up the Rhubarb Pi Kiosk |
 
 # General Notes on Setup and Design
 

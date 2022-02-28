@@ -1,6 +1,6 @@
 # Introduction
 
-The docker-compose-service will run as a system service on reboot. All app containers that run on the Blueberry Pi, will be lauched from this service.
+The docker-compose-service will run as a system service on reboot. All app containers that run on the Rhubarb Pi, will be lauched from this service.
 
 ## Container Networks
 
@@ -12,9 +12,9 @@ Class B: 172.16.0.0 to 172.31.255.255
 Class C: 192.168.0.0 to 192.168.255.255
 ```
 
-I have chosen 172.16.10.0/24, 172.16.20.0/24, and 172.16.30.0/24 for the first app containers deployed on the Blueberry Pi. Future app containers will continue to increment by 10.
+I have chosen 172.16.10.0/24, 172.16.20.0/24, and 172.16.30.0/24 for the first app containers deployed on the Rhubarb Pi. Future app containers will continue to increment by 10.
 
-The Blueberry Pi host system maps ports to apps as follows:
+The Rhubarb Pi host system maps ports to apps as follows:
 
 ```
 6701 - Kiosk app
@@ -62,12 +62,12 @@ The host system
 
     ```
     services:
-        blueberry-pi-core-server:
-            image: doodles67/blueberry-pi-core-server:<version>
+        rhubarb-pi-core-server:
+            image: doodles67/rhubarb-pi-core-server:<version>
             container_name: core-server
             restart: always
             networks: 
-                blueberrypi:
+                rhubarbpi:
                     ipv4_address: 172.16.10.2
             ports:
                 - 6701:6769
@@ -76,7 +76,7 @@ The host system
             container_name: test-node-app
             restart: always
             networks: 
-                blueberrypi:
+                rhubarbpi:
                     ipv4_address: 172.16.10.3
                 testnode:
                     ipv4_address: 172.16.20.3
@@ -89,7 +89,7 @@ The host system
             devices: 
                 - /dev/ttyUSB0:/dev/ttyUSB0
             networks:
-                blueberrypi:
+                rhubarbpi:
                     ipv4_address: 172.16.10.4
                 zwave:
                     ipv4_address: 172.16.30.4
@@ -97,7 +97,7 @@ The host system
                 - 6703:6769
     
     networks:
-        blueberrypi:
+        rhubarbpi:
             driver: bridge
             enable_ipv6: false
             ipam:
@@ -123,7 +123,7 @@ The host system
                       gateway: 172.16.30.1
     ```
 
-    The blueberrypi network is for the main server application (pointed to by the Chromium Kiosk) and allows it to reach other apps for data to be rendered on the Kiosk screen. The other defined networks (zwave, etc.) are sub-networks dedicated to each app allowing private databases, microservices, etc. for each.
+    The rhubarbpi network is for the main server application (pointed to by the Chromium Kiosk) and allows it to reach other apps for data to be rendered on the Kiosk screen. The other defined networks (zwave, etc.) are sub-networks dedicated to each app allowing private databases, microservices, etc. for each.
 
 3. Enable the docker-compose-app service
 
@@ -131,7 +131,7 @@ The host system
     sudo systemctl enable docker-compose-app
     ```
 
-    Now, every time the Blueberry Pi reboots the containers are torn down and recreated.
+    Now, every time the Rhubarb Pi reboots the containers are torn down and recreated.
 
 # Miscellaneous Comments
 
@@ -144,6 +144,6 @@ curl 172.16.10.3:3001/admin/status001/admin/status
 To inspect properties of a network:
 
 ```
-sudo docker network inspect docker_blueberrypi
+sudo docker network inspect docker_rhubarbpi
 ```
 
