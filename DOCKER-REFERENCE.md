@@ -17,7 +17,7 @@ CMD ["node", "app.js"]
 
 The reference image for most apps should start with Node:17.4-buster-slim, but there are cases where this image won't be sufficient (i.e. Zwave app). Each application should test reference images and document results, starting with the smallest image.
 
-Each app should expose port 6769 at a minimum, even if only to provide a welcome message or info message.
+Each app should expose port 6769 at a minimum, even if only to provide a welcome message or info message. A docker-compose file will map system ports to 6769.
 
 # Building Docker Images
 

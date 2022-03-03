@@ -66,36 +66,30 @@ The host system
             image: doodles67/rhubarb-pi-core-server:<version>
             container_name: core-server
             restart: always
-            networks: 
-                rhubarbpi:
-                    ipv4_address: 172.16.10.2
+            networks:
+                - rhubarbpi
             ports:
-                - 6701:6769
+            - 6701:6769
         test-node-app:
             image: doodles67/docker-node-app-rpi:<version>
             container_name: test-node-app
             restart: always
-            networks: 
-                rhubarbpi:
-                    ipv4_address: 172.16.10.3
-                testnode:
-                    ipv4_address: 172.16.20.3
+            networks:
+                - rhubarbpi
+                - testnode
             ports:
                 - 6702:6769
         zwave-app:
             image: doodles67/zwave-app-rpi:<version>
             container_name: zwave-app
             restart: always
-            devices: 
+            devices:
                 - /dev/ttyUSB0:/dev/ttyUSB0
             networks:
-                rhubarbpi:
-                    ipv4_address: 172.16.10.4
-                zwave:
-                    ipv4_address: 172.16.30.4
+                - rhubarbpi
+                - zwave
             ports:
                 - 6703:6769
-    
     networks:
         rhubarbpi:
             driver: bridge
@@ -124,6 +118,12 @@ The host system
     ```
 
     The rhubarbpi network is for the main server application (pointed to by the Chromium Kiosk) and allows it to reach other apps for data to be rendered on the Kiosk screen. The other defined networks (zwave, etc.) are sub-networks dedicated to each app allowing private databases, microservices, etc. for each.
+
+    **NOTE** When I renamed the platform from blueberrypi to rhubarbpi I had trouble starting the docker-compose-app service. There were no containers after reboot or power cycle. After investigation I found that a "docker_blueberrypi" network had persisted, even after removing the containers and images and reloading. The following command was needed to remove the network, then I was able to reboot and start all containers.
+
+    ```
+    sudo docker network rm docker_blueberrypi
+    ```
 
 3. Enable the docker-compose-app service
 
