@@ -131,7 +131,7 @@ The host system
     sudo systemctl enable docker-compose-app
     ```
 
-    Now, every time the Rhubarb Pi reboots the containers are torn down and recreated.
+    Now, every time the Rhubarb Pi reboots the containers are torn down and recreated (? or stopped and restarted?).
 
 # Miscellaneous Comments
 
