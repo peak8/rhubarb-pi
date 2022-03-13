@@ -82,26 +82,10 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
     sudo systemctl enable docker
     ```
 
-8. Install Nodejs and NPM 
-
-    Note: doing "sudo apt install nodejs" will result in an old version (10.24) that can't be updated. Likely due to Raspbian package manager? The following commands needed to be used instead.
-
-    ```
-    curl -sL https://deb.nodesource.com/setup_17.x | sudo -E bash -
-    sudo apt install -y nodejs
-    ```
-
-    After installing Node and npm, I realized that the container image would have Node installed, so I uninstalled as follows:
-
-    ```
-    sudo apt purge nodejs
-    sudo apt autoremove
-    ```
-
-9. Set up the Docker-Compose file
+8. Set up the Docker-Compose file
 
     See DOCKER-COMPOSE-SERVICE.md
 
-10. Optionally set up the kiosk
+9. Optionally set up the kiosk
 
     This step sets up the Rhubarb Pi to display a React app on a monitor connected to the HDMI ports. See KIOSK-SETUP.md.
