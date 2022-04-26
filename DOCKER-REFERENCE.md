@@ -4,17 +4,6 @@ This documents just has some notes and useful tips on creating and deploying doc
 
 # Creating Docker files
 
-Docker files for apps deployed on the Rhubarb Pi have varying needs but minimally will look as follows.
-
-```
-FROM arm32v7/node:17.4-buster-slim
-COPY package.json ./
-COPY app.js ./
-RUN npm install
-EXPOSE 6769
-CMD ["node", "app.js"]
-```
-
 The reference image for most apps should start with Node:17.4-buster-slim, but there are cases where this image won't be sufficient (i.e. Zwave app). Each application should test reference images and document results, starting with the smallest image.
 
 Each app should expose port 6769 at a minimum, even if only to provide a welcome message or info message. A docker-compose file will map system ports to 6769.
@@ -36,12 +25,25 @@ The Raspberry Pi (4) should report armv7l.
 Build the image with the following command. Docker Desktop might need to be open and I think I had to create a build kit container to run this but I didn't record how. ToDo: work out if Docker desktop has to be open and a build kit created for buildx.
 
 ```
-docker buildx build --platform=linux/arm/v7 -t doodles67/<image name>:<version> --push .
+docker buildx build --no-cache --platform=linux/arm/v7 -t doodles67/<image name>:<version> --push -f <dockerfile name> .
 ```
 
 This command with the --push option will push the image to Docker Hub. Omitting <version> will default to "latest".
 
+**NOTE** I ran into issues with the docker cache trying to build. Sometimes app changes would be omitted or if I tried to build two different images within the same terminal window then both images would be identical. Adding --no-cache forces a complete build that adds time but ensures everything is up to date.
+
 # Deploy the image to the Raspberry Pi
+
+If the image is already running on the rPI then do the following steps first:
+
+```
+sudo docker ps -a
+sudo docker rm -f <container name>
+sudo docker images
+sudo docker image rm -f <image id>
+```
+
+Now pull the desired image to the device:
 
 ```
 sudo docker pull doodles67/<image name>:<version>
@@ -84,6 +86,8 @@ sudo docker ps
 sudo docker stop <container id or name>
 sudo docker rm <container id or name>
 ```
+
+Then update the app version in the docker-compose.yaml. 
 
 Next, pull the latest image.
 

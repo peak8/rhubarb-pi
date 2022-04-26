@@ -14,16 +14,13 @@ Class C: 192.168.0.0 to 192.168.255.255
 
 I have chosen 172.16.10.0/24, 172.16.20.0/24, and 172.16.30.0/24 for the first app containers deployed on the Rhubarb Pi. Future app containers will continue to increment by 10.
 
-The Rhubarb Pi host system maps ports to apps as follows:
-
-```
-6701 - Kiosk app
-6702 - Test Node app
-6703 - Zwave app
-
 Each app exposes port 6769 at a minimum. This port is arbitrarily chosen. It is unassigned with ICANN and it is the years of release for my two favorite Beatles albums, Abbey Road and Sgt. Peppers.
 
-The host system
+The Rhubarb Pi host system maps ports to app container ports as follows:
+
+- 6701 - core server app
+
+The core server app maps its internal port 6769 to system port 6701 for debugging purposes. The other services are accessed by the core server app over the "rhubarbpi" Docker bridge network. To debug the other services, the core server app exposes end points that can be forwarded to the other services.
 
 # Set Up the Docker-Compose service
 
@@ -69,17 +66,15 @@ The host system
             networks:
                 - rhubarbpi
             ports:
-            - 6701:6769
-        test-node-app:
+                - 6701:6769
+        test-node-app-rpi:
             image: doodles67/docker-node-app-rpi:<version>
             container_name: test-node-app
             restart: always
             networks:
                 - rhubarbpi
                 - testnode
-            ports:
-                - 6702:6769
-        zwave-app:
+        zwave-app-rpi:
             image: doodles67/zwave-app-rpi:<version>
             container_name: zwave-app
             restart: always
@@ -88,8 +83,16 @@ The host system
             networks:
                 - rhubarbpi
                 - zwave
+        rhubarb-pi-frontend:
+            image: doodles67/rhubarb-pi-client-poc:<version>
+            container_name: frontend
+            restart: always
+            //networks:
+            //    - rhubarbpi
             ports:
-                - 6703:6769
+                - 6702:80
+            //environment:
+            //    WAIT_HOSTS: core-server:6769
     networks:
         rhubarbpi:
             driver: bridge
@@ -116,34 +119,24 @@ The host system
                     - subnet: 172.16.30.0/24
                       gateway: 172.16.30.1
     ```
+    
+    The other defined networks (zwave, etc.) are sub-networks dedicated to each app allowing private databases, microservices, etc. for each.
 
-    The rhubarbpi network is for the main server application (pointed to by the Chromium Kiosk) and allows it to reach other apps for data to be rendered on the Kiosk screen. The other defined networks (zwave, etc.) are sub-networks dedicated to each app allowing private databases, microservices, etc. for each.
-
-    **NOTE** When I renamed the platform from blueberrypi to rhubarbpi I had trouble starting the docker-compose-app service. There were no containers after reboot or power cycle. After investigation I found that a "docker_blueberrypi" network had persisted, even after removing the containers and images and reloading. The following command was needed to remove the network, then I was able to reboot and start all containers.
+3. Disable the default "bridge" network by adding the following statement in the /etc/docker/daemon.json file
 
     ```
-    sudo docker network rm docker_blueberrypi
+    {
+        "iptables": false,
+        "bridge": "none"
+    }
     ```
 
-3. Enable the docker-compose-app service
+    Create the file if it doesn't already exist
+
+4. Enable the docker-compose-app service
 
     ```
     sudo systemctl enable docker-compose-app
     ```
 
     Now, every time the Rhubarb Pi reboots the containers are torn down and recreated (? or stopped and restarted?).
-
-# Miscellaneous Comments
-
-To test network setup you can make a call into a container apps api from a terminal as follows (zwave example):
-
-```
-curl 172.16.10.3:3001/admin/status001/admin/status
-```
-
-To inspect properties of a network:
-
-```
-sudo docker network inspect docker_rhubarbpi
-```
-

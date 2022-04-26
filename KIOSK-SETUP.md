@@ -51,6 +51,12 @@ The procedures are based on the following tutorials and assumes Raspberry Pi OS 
     sed -i 's/"exited_cleanly":false/"exited_cleanly":true/; s/"exit_type":"[^"]\+"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences
     ```
 
+    Remove the chromium cache. If there is an error retrieving the React app, I do want to see the previous cached view.
+
+    ```
+    rm -rf ~/.cacher/chromium
+    ```
+
     Run the Chromium browser in kiosk mode. Pass in an environment variable ($KIOSK_URL) that contains the URL of the Web app to launch.
 
     ```
@@ -79,10 +85,8 @@ The procedures are based on the following tutorials and assumes Raspberry Pi OS 
     Add the KIOSK_URL to the file
 
     ```
-    export KIOSK_URL=http://172.16.10.2:6769/app
+    export KIOSK_URL=http://localhost:6702/
     ```
-
-    172.16.10.2 is the static IP address on the docker rhubarbpi network which is assigned to the main kiosk app. See DOCKER-COMPOSE-SERVICE.md for more details.
 
 5. Start the X server on boot
 
