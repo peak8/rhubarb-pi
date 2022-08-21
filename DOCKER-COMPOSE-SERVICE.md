@@ -84,13 +84,13 @@ The core server app maps its internal port 6769 to system port 6701 for debuggin
                 - rhubarbpi
                 - zwave
         rhubarb-pi-frontend:
-            image: doodles67/rhubarb-pi-client-poc:<version>
+            image: doodles67/rhubarb-pi-display:<version>
             container_name: frontend
             restart: always
-            //networks:
-            //    - rhubarbpi
+            networks:
+                - rhubarbpi
             ports:
-                - 6702:80
+                - 6702:3000
             //environment:
             //    WAIT_HOSTS: core-server:6769
     networks:
