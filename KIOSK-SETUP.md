@@ -1,6 +1,6 @@
 # Introduction
 
-The Rhubarb Pi can have a Kiosk mode, where a React app is displayed on a monitor connected to one of the HDMI ports. This requires a number of packages be installed for managing the graphics. This document details the procedure for setting up the environment using Openbox as a Window Manager.
+The Rhubarb Pi can have a Kiosk mode, where a React or Electron app is displayed on a monitor connected to one of the HDMI ports. This requires a number of packages be installed for managing the graphics. This document details the procedure for setting up the environment using Openbox as a Window Manager.
 
 The procedures are based on the following tutorials and assumes Raspberry Pi OS Lite (32-bit) based on Debian Buster is the base OS:
 

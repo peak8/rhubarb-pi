@@ -31,7 +31,7 @@ Here‘s the basic process of developing and deploying an app with docker:
 
 4. Deploy the image to the Raspberry Pi
 
-    Se DOCKER-REFERENCE.md
+    See DOCKER-REFERENCE.md
 
 5. Add the image to the docker-compose service on the Raspberry Pi.
 

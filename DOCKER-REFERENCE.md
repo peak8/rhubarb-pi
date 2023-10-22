@@ -2,11 +2,15 @@
 
 This documents just has some notes and useful tips on creating and deploying docker images.
 
+&nbsp;
+
 # Creating Docker files
 
 The reference image for most apps should start with Node:17.4-buster-slim, but there are cases where this image won't be sufficient (i.e. Zwave app). Each application should test reference images and document results, starting with the smallest image.
 
 Each app should expose port 6769 at a minimum, even if only to provide a welcome message or info message. A docker-compose file will map system ports to 6769.
+
+&nbsp;
 
 # Building Docker Images
 
@@ -32,6 +36,8 @@ This command with the --push option will push the image to Docker Hub. Omitting 
 
 **NOTE** I ran into issues with the docker cache trying to build. Sometimes app changes would be omitted or if I tried to build two different images within the same terminal window then both images would be identical. Adding --no-cache forces a complete build that adds time but ensures everything is up to date.
 
+&nbsp;
+
 # Deploy the image to the Raspberry Pi
 
 If the image is already running on the rPI then do the following steps first:
@@ -55,6 +61,8 @@ Verify image is loaded
 sudo docker images
 ```
 
+&nbsp;
+
 # Running the Image on the Raspberry Pi
 
 To manually run the image, enter the following command:
@@ -69,11 +77,15 @@ See "Accessing tty Devices" for run command that exposes a serial USB device wit
 
 To automatically run the image, add it to the system docker-compose.yml file. See DOCKER-COMPOSE-SERVICE.md.
 
+&nbsp;
+
 # Inspect the Container File System
 
 ```
 sudo docker exec -t -i <container name> /bin/bash
 ```
+
+&nbsp;
 
 # Update the Image (Manually)
 
@@ -100,9 +112,13 @@ The -f flag is only required if you don't remove any containers created from the
 
 Reboot the Raspberry Pi and a new container should be started on the new image.
 
+&nbsp;
+
 # Update the Image (automated)
 
 ToDo: figure out how to push updates to deployed devices.
+
+&nbsp;
 
 # Accessing tty Devices
 
@@ -117,6 +133,8 @@ For the moment I am hard coding the port number in the app expecting that a seri
 See DOCKER-COMPOSE-SERVICE.md for adding to the docker-compose file.
 
 ToDo: add flexibility in both the app and the way port numbers are mapped to the docker container so that the port number is not hard coded. Will likely require the procedure below:
+
+&nbsp;
 
 ## A Procedure to have the Rhubarb Pi map a port to a conatiner
 

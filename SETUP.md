@@ -1,6 +1,6 @@
 # Introduction
 
-The Rhubarb Pi is intended to be used with a display with Openbox as the window manager.  Chromium is used in kiosk mode to display React apps for various applications.
+The Rhubarb Pi can be run as a headless server or with a display with Openbox as a window manager and Chromium used in kiosk mode to display React oe Electron apps for various applications.
 
 An image is set up and tested on one uSD card and then can be cloned for deployment to other Raspberry Pi's.
 
@@ -9,6 +9,8 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 [Based on this tutorial](https://dev.to/elalemanyo/how-to-install-docker-and-docker-compose-on-raspberry-pi-1mo)
 
 1. Provision a uSD card with Raspberry Pi OS Lite (32-bit) based on Debian Buster. The Raspberry Pi Imager app is the easiest way to do this.
+
+&nbsp;
 
 2. Power up RPi with uSD installed and ssh into the RPi to avoid the need for a keyboard.
 
@@ -27,6 +29,8 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
             --> OK
                 --> Finish
     ```
+
+&nbsp;
 
 3. Configure Startup settings for autologin. Done as a convenience for devlopment. Revisit later.
 
@@ -53,6 +57,8 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 
     Navigate to the Finish option and enter. When asked to reboot select yes.
 
+&nbsp;
+
 4. Update and Upgrade to ensure latest versions of software are loaded.
 
     ```
@@ -61,11 +67,15 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
     sudo reboot
     ```
 
+&nbsp;
+
 5. Install Docker
 
     ```
     curl -sSL https://get.docker.com | sh
     ```
+
+&nbsp;
 
 6. Install Docker Compose
 
@@ -76,16 +86,22 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
     sudo pip3 install docker-compose
     ```
 
+&nbsp;
+
 7. Enable the Docker System Service to run on reboot
 
     ```
     sudo systemctl enable docker
     ```
 
+&nbsp;
+
 8. Set up the Docker-Compose file
 
     See DOCKER-COMPOSE-SERVICE.md
 
-9. Optionally set up the kiosk
+&nbsp;
+
+9. Optionally set up the kiosk (recommended)
 
     This step sets up the Rhubarb Pi to display a React app on a monitor connected to the HDMI ports. See KIOSK-SETUP.md.
