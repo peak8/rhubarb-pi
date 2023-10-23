@@ -17,7 +17,7 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
     It seems Raspberry Pi OS may no longer support ssh by default. If this is the case, then enable it through raspi-config using a keyboard.
 
     ```
-    sudo raspi-config
+    $ sudo raspi-config
     ```
 
     From the main menu navigate to Interfacing Options to enable it:
@@ -35,7 +35,7 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 3. Configure Startup settings for autologin. Done as a convenience for devlopment. Revisit later.
 
     ```
-    sudo raspi-config
+    $ sudo raspi-config
     ```
 
     From the main menu navigate to Console Autologin to enable it on reboot:
@@ -62,9 +62,9 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 4. Update and Upgrade to ensure latest versions of software are loaded.
 
     ```
-    sudo apt-get update
-    sudo apt-get upgrade
-    sudo reboot
+    $ sudo apt-get update
+    $ sudo apt-get upgrade
+    $ sudo reboot
     ```
 
 &nbsp;
@@ -72,7 +72,7 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 5. Install Docker
 
     ```
-    curl -sSL https://get.docker.com | sh
+    $ curl -sSL https://get.docker.com | sh
     ```
 
 &nbsp;
@@ -80,10 +80,10 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 6. Install Docker Compose
 
     ```
-    sudo apt-get install libffi-dev libssl-dev
-    sudo apt install python3-dev
-    sudo apt-get install -y python3 python3-pip
-    sudo pip3 install docker-compose
+    $ sudo apt-get install libffi-dev libssl-dev
+    $ sudo apt install python3-dev
+    $ sudo apt-get install -y python3 python3-pip
+    $ sudo pip3 install docker-compose
     ```
 
 &nbsp;
@@ -91,7 +91,7 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 7. Enable the Docker System Service to run on reboot
 
     ```
-    sudo systemctl enable docker
+    $ sudo systemctl enable docker
     ```
 
 &nbsp;
@@ -105,3 +105,28 @@ An image is set up and tested on one uSD card and then can be cloned for deploym
 9. Optionally set up the kiosk (recommended)
 
     This step sets up the Rhubarb Pi to display a React app on a monitor connected to the HDMI ports. See KIOSK-SETUP.md.
+
+&nbsp;
+
+10. Optionally set up WiFi
+
+    ```
+    $ sudo raspi-config
+    ```
+
+    From the main menu navigate to Wireless LAN to configure it:
+    
+    ```
+    System Options 
+    --> Wireless LAN
+    ```
+
+    You will see a list of countries, select the US.
+
+    You will then be asked to enter the wireless SSID (network name)
+
+    Finally, you will be asked to enter the password.
+
+    Select Finish.
+
+    Inspect the list of networks and confirm wlan0 is now configured and note the IP address.
