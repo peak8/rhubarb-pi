@@ -1,6 +1,6 @@
 # Introduction
 
-This documents just has some notes and useful tips on creating and deploying docker images.
+This document just has some notes and useful tips on creating and deploying docker images to the Rhubarb Pi.
 
 &nbsp;
 
