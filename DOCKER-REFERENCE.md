@@ -136,7 +136,7 @@ ToDo: add flexibility in both the app and the way port numbers are mapped to the
 
 &nbsp;
 
-## A Procedure to have the Rhubarb Pi map a port to a conatiner
+## A Procedure to have the Rhubarb Pi map a port to a container
 
 The following procedure is a safe way to give access to ttyUSBx devices from within the Docker container without granting --priveleged access, which creates a security vulnerability.
 

@@ -17,22 +17,16 @@ Rhubarb Pi is a platform for hosting dockerized applications on a customized Ras
 
 Here‘s the basic process of developing and deploying an app with docker:
 
-1. Install Docker and Docker-Compose on the Raspberry Pi
+1. Provision a Raspberry Pi device as detailed in the SETUP.md file. Image name and version details will vary. You have now made Rhubarb Pi :-)
 
-    See SETUP.md.
+2. Set up a registry at Docker Hub for the dockerized applications to be deployed on the Rhubarb Pi.
 
-2. Set up a registry at Docker Hub
+3. Develop a core-server application. At a minimum, this application exposes port 6769 to the rhubarbpi network defined in the docker-compose-service file. This port is mapped to system port 6701 allowing for external communication with the app.
 
-    Docker hub is the github of docker images. I have account with doodles67 as the user name. 
+4. Optionally, develop a front-end application that exposes port 3000, mapped to system port 6702. In addition to being accessible on port 6702, the front-end application will also be displayed on a screen connected to the HDMI port (if the optional kiosk setup is performed in SETUP.md).
 
-3. Initiate a Docker build of the app to create the Docker Image.
+5. Optionally, develop other applications to support the core-server and/or front-end applications as needed. These applications can connect to the rhubarbpi network or custom networks defined in the docker-compose file and will typically expose custom ports that are not mapped to any system port.
 
-    See DOCKER-REFERENCE.md
+6. Create docker files to package each app for deployment. See the DOCKER-REFERENCE.md file for guidance.
 
-4. Deploy the image to the Raspberry Pi
-
-    See DOCKER-REFERENCE.md
-
-5. Add the image to the docker-compose service on the Raspberry Pi.
-
-    See DOCKER-COMPOSE-SERVICE.md
+7. Build and deploy the application images to Docker Hub and ensure the image name name and version matches what is specified in the docker-compose file. See DOCKER-REFERENCE.md

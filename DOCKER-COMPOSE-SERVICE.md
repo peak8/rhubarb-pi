@@ -96,7 +96,7 @@ The core server app maps its internal port 6769 to system port 6701 and the kios
             //    WAIT_HOSTS: core-server:6769
     ```
 
-    For a copy of the docker-compose.yaml configured on the rhubarb pi, see the respective repository for the core-server app deployed on the system.
+    Additional services may be added as the application requires. Details for these additional applications shall be specified in the core-server app repository deployed on the system.
 
 &nbsp;
 
