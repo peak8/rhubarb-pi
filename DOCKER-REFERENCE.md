@@ -6,7 +6,14 @@ This document just has some notes and useful tips on creating and deploying dock
 
 # Creating Docker files
 
-The reference image for most apps should start with Node:17.4-buster-slim, but there are cases where this image won't be sufficient (i.e. Zwave app). Each application should test reference images and document results, starting with the smallest image.
+All deployed containers should be based on a reference image from the [Docker Hub image repository](https://hub.docker.com/search?image_filter=official&q=).
+
+Reference images I have used:
+
+- [node:20.10-buster-slim](https://hub.docker.com/layers/library/node/20.10-buster-slim/images/sha256-8f4d2a2533fe5319e819f7af78e27563e2c1307b7550c549ad7dfbf310fe3a1b?context=explore)
+- [python:3.11-slim-buster](https://hub.docker.com/layers/library/python/3.11-slim-buster/images/sha256-b94af75d4ff65c50bf1b2119bca6d0ba707037bacd0cb75314801a6953c03241?context=explore)
+
+Each application should test reference images and document results, starting with the smallest image.
 
 Each app should expose port 6769 at a minimum, even if only to provide a welcome message or info message. A docker-compose file will map system ports to 6769.
 
@@ -29,7 +36,7 @@ The Raspberry Pi (4) should report armv7l.
 Build the image with the following command. Docker Desktop might need to be open and I think I had to create a build kit container to run this but I didn't record how. ToDo: work out if Docker desktop has to be open and a build kit created for buildx.
 
 ```
-docker buildx build --no-cache --platform=linux/arm/v7 -t doodles67/<image name>:<version> --push -f <dockerfile name> .
+docker buildx build --no-cache --platform=linux/arm/v7 -t <dockerhub namespace>/<image name>:<version> --push -f <dockerfile name> .
 ```
 
 This command with the --push option will push the image to Docker Hub. Omitting <version> will default to "latest".
@@ -52,7 +59,7 @@ sudo docker image rm -f <image id>
 Now pull the desired image to the device:
 
 ```
-sudo docker pull doodles67/<image name>:<version>
+sudo docker pull <dockerhub namespace>/<image name>:<version>
 ```
 
 Verify image is loaded
@@ -68,7 +75,7 @@ sudo docker images
 To manually run the image, enter the following command:
 
 ```
-sudo docker run -d -p <host:container port forward> --name <name> -t doodles67/<image name>:<version>
+sudo docker run -d -p <host:container port forward> --name <name> -t <dockerhub namespace>/<image name>:<version>
 ```
 
 This creates a container that can be stopped and restarted. To see console messages, omit the -d flag. Omitting the --name flag will result in a random name being assigned.
@@ -105,7 +112,7 @@ Next, pull the latest image.
 
 ```
 sudo docker image rm -f <image id>
-sudo docker pull doodles67/<image name>:<version>
+sudo docker pull <dockerhub namespace>/<image name>:<version>
 ```
 
 The -f flag is only required if you don't remove any containers created from the image.
@@ -125,7 +132,7 @@ ToDo: figure out how to push updates to deployed devices.
 For an app that requires access to a serial tty device, the --device option must be added to the run command as follows:
 
 ```
-sudo docker run -p <host port:container port> --name <name> --device /dev/ttyUSBx -t doodles67/<image name>:<version>
+sudo docker run -p <host port:container port> --name <name> --device /dev/ttyUSBx -t <dockerhub namespace>/<image name>:<version>
 ```
 
 For the moment I am hard coding the port number in the app expecting that a serial device plugged into it will match.
