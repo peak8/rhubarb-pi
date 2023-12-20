@@ -25,7 +25,7 @@ The core server app maps its internal port 6769 to system port 6701 and the kios
 
 # Set Up the Docker-Compose service
 
-1. Create the docker-composer-app.service file.
+1. Create the docker-compose-app.service file.
 
     ```
     # /etc/systemd/system/docker-compose-app.service
@@ -45,6 +45,12 @@ The core server app maps its internal port 6769 to system port 6701 and the kios
 
     [Install]
     WantedBy=multi-user.target
+    ```
+
+    Be sure to give the file execute permissions:
+
+    ```
+    chmod 777 docker-compose-app.service
     ```
 
     &nbsp;
@@ -92,7 +98,7 @@ The core server app maps its internal port 6769 to system port 6701 and the kios
                 - rhubarbpi
             ports:
                 - 6702:3000
-            //environment:
+            //environment:            (do not include commented lines)
             //    WAIT_HOSTS: core-server:6769
     ```
 
@@ -120,3 +126,9 @@ The core server app maps its internal port 6769 to system port 6701 and the kios
     ```
 
     Now, every time the Rhubarb Pi reboots the containers are torn down and recreated (? or stopped and restarted?).
+
+    **IMPORTANT** If the compose service fails to start run the following command to see the logs:
+
+    ```
+    sudo docker logs --tail 50 --follow --timestamps core-server
+    ```
