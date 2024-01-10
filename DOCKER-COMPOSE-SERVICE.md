@@ -71,6 +71,12 @@ The core server app maps its internal port 6769 to system port 6701 and the kios
         rhubarb-pi-core-server:
             image: <docker-hub-path>:<version>
             container_name: core-server
+            devices:
+                - /dev/ttyUSB0:/dev/ttyUSB0
+            environment:
+                - PUID=1000
+                - PGID=1000
+                - EXTRA_GID=5
             restart: always
             networks:
                 - rhubarbpi
