@@ -88,8 +88,38 @@ To automatically run the image, add it to the system docker-compose.yml file. Se
 
 # Inspect the Container File System
 
+Run the following command to run a bash shell in the container.
+
 ```
-sudo docker exec -t -i <container name> /bin/bash
+sudo docker exec -it <container name> bash
+```
+
+&nbsp;
+
+# Viewing Container Logs
+
+To see the entire container history:
+
+```
+sudo docker logs <container name>
+```
+
+To see the most recent (count):
+
+```
+sudo docker logs <container name> --tail <number>
+```
+
+To see the most recent (time):
+
+```
+sudo docker logs <container name> --since <h or m>
+```
+
+If you trust yourself to clear logs:
+
+```
+sudo sh -c 'echo "" > $(docker inspect --format="{{.LogPath}}" <container-name>)'
 ```
 
 &nbsp;
