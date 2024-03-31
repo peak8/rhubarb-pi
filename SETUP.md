@@ -1,6 +1,6 @@
 # Introduction
 
-The Rhubarb Pi can be run as a headless server or with a display with Openbox as a window manager and Chromium used in kiosk mode to display React oe Electron apps for various applications.
+The Rhubarb Pi can be run as a headless server or with a display using Openbox as a window manager and Chromium used in kiosk mode to display webapps for various applications.
 
 An image is set up and tested on one uSD card and then can be cloned for deployment to other Raspberry Pi's.
 

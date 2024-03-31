@@ -113,11 +113,17 @@ The core server app maps its internal port 6769 to system port 6701 and the kios
     ```
     {
         "iptables": false,
-        "bridge": "none"
+        "bridge": "none",
+        "log-opts": {
+            "max-size": "1m",
+            "max-file": "5"
+        }
     }
     ```
 
-    Create the file if it doesn't already exist
+    Create the file if it doesn't already exist.
+
+    log-opts are set create up to 5 files on 1Mb, oldest file will be deleted.
 
 &nbsp;
 
@@ -132,5 +138,5 @@ The core server app maps its internal port 6769 to system port 6701 and the kios
     **IMPORTANT** If the compose service fails to start run the following command to see the logs:
 
     ```
-    sudo docker logs --tail 50 --follow --timestamps core-server
+    sudo docker logs --tail 50 --timestamps core-server
     ```

@@ -104,6 +104,12 @@ To see the entire container history:
 sudo docker logs <container name>
 ```
 
+To see with timestamps
+
+```
+sudo docker logs <container name> --timestamps
+```
+
 To see the most recent (count):
 
 ```
